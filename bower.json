@@ -1,0 +1,29 @@
+{
+  "name": "chat app",
+  "description": "",
+  "main": "app.js",
+  "authors": [
+    "Recycle Bin <nopbongdem@gmail.com>"
+  ],
+  "license": "MIT",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.9",
+    "bootstrap": "~3.3.6",
+    "angular-ui-router": "~0.2.15",
+    "angular-material": "~1.0.2",
+    "angular-socket-io": "~0.7.0"
+  },
+  "devDependencies": {}
+}
