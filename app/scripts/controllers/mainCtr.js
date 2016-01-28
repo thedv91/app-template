@@ -1,4 +1,5 @@
 (function() {
+	"use strict";
 	angular.module('app.controllers')
 		.controller('MainController', ['socketService', function(socketService) {
 			var self = this;

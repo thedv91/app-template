@@ -1,4 +1,5 @@
 (function() {
+	"use strict";
 	angular.module('app.services')
 		.factory('socketService', ['$rootScope', 'socket_url', function($rootScope, socket_url) {
 			var socket = io.connect(socket_url);

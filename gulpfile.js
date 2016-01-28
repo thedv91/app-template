@@ -17,6 +17,9 @@ var series = require('stream-series');
 var templateCache = require('gulp-angular-templatecache');
 var connect = require('gulp-connect');
 var open = require("open");
+var rev = require('gulp-rev');
+var del = require('del');
+
 
 var path = {
 	dist: 'dist',
@@ -42,9 +45,10 @@ gulp.task('connect', function() {
 });
 
 gulp.task('watch', function() {
-	gulp.watch(path.app + '/**/*.js', ['scripts']);
-	gulp.watch(path.app + '/**/*.scss', ['sass']);
+	gulp.watch(path.app + '/**/*.js', ['clean-scripts', 'scripts', 'inject']);
+	gulp.watch(path.app + '/**/*.scss', ['clean-styles', 'sass', 'inject']);
 	gulp.watch(path.app + '/**/*.html', ['coppy-html', 'inject']);
+
 });
 
 gulp.task('sass', function() {
@@ -56,7 +60,10 @@ gulp.task('sass', function() {
 		.pipe(minifyCss({
 			compatibility: 'ie8'
 		}))
-		.pipe(sourcemaps.write())
+		.pipe(rev())
+		.pipe(sourcemaps.write('.'))
+		.pipe(gulp.dest(path.dist + '/css'))
+		.pipe(rev.manifest())
 		.pipe(gulp.dest(path.dist + '/css'));
 });
 
@@ -64,7 +71,14 @@ gulp.task('scripts', function() {
 	return gulp.src(path.app + '/**/*.js')
 		.pipe(jshint())
 		.pipe(jshint.reporter(stylish))
+		.pipe(sourcemaps.init({
+			loadMaps: true
+		}))
 		.pipe(concat('app.js'))
+		.pipe(rev())
+		.pipe(sourcemaps.write('.'))
+		.pipe(gulp.dest(path.dist + '/js'))
+		.pipe(rev.manifest())
 		.pipe(gulp.dest(path.dist + '/js'));
 });
 
@@ -103,14 +117,14 @@ gulp.task('coppy-html', function() {
 });
 
 gulp.task('clean-scripts', function() {
-	return gulp.src(path.dist + '/**/*.js', {
+	return gulp.src([path.dist + '/js/*.js', path.dist + '/js/*.map'], {
 			read: false
 		})
 		.pipe(clean());
 });
 
 gulp.task('clean-styles', function() {
-	return gulp.src(path.dist + '/**/*.css', {
+	return gulp.src([path.dist + '/css/*.css', path.dist + '/css/*.map'], {
 			read: false
 		})
 		.pipe(clean());
@@ -120,11 +134,12 @@ gulp.task('clean', function() {
 	return gulp.src(path.dist, {
 			read: false
 		})
-		.pipe(clean());
+		.pipe(clean({
+			force: true
+		}));
 });
 
 gulp.task('inject', function() {
-
 	var vendorStream = gulp.src([path.vendorjs + '/**/*.js'], {
 		read: false
 	});
@@ -178,5 +193,6 @@ gulp.task('template', function() {
 		.pipe(templateCache({
 			module: 'app.templates'
 		}))
+		.pipe(rev())
 		.pipe(gulp.dest(path.dist + '/js'));
 });

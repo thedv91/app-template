@@ -1,4 +1,5 @@
 (function() {
+	"use strict";
 	angular.module('myApp', [
 		'ui.router',
 		'app.config',
@@ -10,6 +11,7 @@
 		'app.services',
 		'app.values'
 	]);
+
 
 	angular.module('app.run', []);
 	angular.module('app.config', []);

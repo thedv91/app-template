@@ -1,4 +1,5 @@
 (function() {
+	"use strict";
 	angular.module('app.run').run([function() {
 		(function(d, s, id) {
 			var js, fjs = d.getElementsByTagName(s)[0];
